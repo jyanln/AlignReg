@@ -47,7 +47,7 @@ def train_step(model, images, aug_images, labels, optimizer, loss_fn, l2_lambda)
         loss_val += sum(model.losses)
 
         # squared l2 regularization
-        loss_val += tf_maxsql2(model, images, aug_images, l2_lambda)
+        loss_val += tf_maxsql2(model, images, aug_images, loss_fn, labels, l2_lambda)
 
     loss_history.append(loss_val)
     accuracy.append(measure_acc(model, images, labels, accuracy_metric))
@@ -78,6 +78,7 @@ def tf_train(train_data,
     '''
     accuracy.clear()
     loss_history.clear()
+    accuracy_metric.reset_state()
 
     # preprocess by augmenting the images
     aug_data = train_data.map(lambda img, label: (img, list(map(lambda aug: aug(img), augmentations)), label))

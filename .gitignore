@@ -1,3 +1,6 @@
 __pycache__/
-data/
-model_1.png
+examples/data/
+examples/model_1.png
+*.swp
+src/*.swp
+examples/*.swp

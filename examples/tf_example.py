@@ -1,30 +1,21 @@
 import os
 import sys
+from matplotlib import pyplot as plt
+import tensorflow as tf
+import tensorflow.keras as keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import tensorflow_datasets as tfds
 
-'''
-for colab 
-'''
-sys.path.append('/content/boraintation/code/tf_and_torch_train')
-sys.path.append('/content/boraintation/code/regularization_config')
-
-'''
-sys.path.append('code/tf_and_torch_train')
-sys.path.append('code/regularization_config')
-'''
-from training import *
-from config import *
+sys.path.append('../src')
+from tf_training import *
 
 batch_size = 128
 imgDimension = (28, 28)
-
-'''
-for colab
-'''
-data_path = '/content/datasets/cat_dog/archive/train'
-
-# data_path = 'datasets/cat_dog/archive/train'
 epochs = 3
-input_size = (28,28)
+input_size = (28, 28)
 
 
 'loading the dataset'     
@@ -54,13 +45,20 @@ model = tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=input_si
                                     tf.keras.layers.Dense(10, activation = 'softmax')
                                    ])
 
+
+model2 = tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=input_size),
+                                    tf.keras.layers.Dense(128, activation='relu'),
+                                    tf.keras.layers.Dense(10, activation = 'softmax')
+                                   ])
+
 keras.utils.plot_model(model, to_file='model_1.png', show_shapes=True)
 
 optimizer=tf.keras.optimizers.Adam(0.001)
+optimizer2=tf.keras.optimizers.Adam(0.001)
 loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False)
-loss2 = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+loss2 = keras.losses.SparseCategoricalCrossentropy(from_logits=False)
 
-l2_lambda = 0.001
+l2_lambda = 0.005
 
 '''
 The imgMin and imgMax are also given default for the convinient of the user
@@ -74,24 +72,31 @@ So the user has to pass the following parameters into the train function
 - l2_lambda : The lambda to of l2 regularization
 '''
 
-acc, loss_hist = train(ds_train, 
+acc, loss_hist = tf_train(ds_train, 
                         model, 
                         optimizer, 
                         epochs, 
                         loss,
                         l2_lambda)
 
+acc2, loss_hist2 = tf_train(ds_train, 
+                        model2, 
+                        optimizer2, 
+                        epochs, 
+                        loss2,
+                        0.0)
+
 print(f"The length of the loss_history is {len(loss_hist)}")
 fig, ax = plt.subplots(2)
 ax[0].plot(loss_hist, color='r')
-ax[1].plot(loss_hist, color='b')
+ax[1].plot(loss_hist2, color='b')
 plt.xlabel('Batch #')
 plt.ylabel('Loss [entropy]')
 plt.show()
 
 fig, ax = plt.subplots(2)
 ax[0].plot(acc, color='r')
-ax[1].plot(acc, color='b')
+ax[1].plot(acc2, color='b')
 plt.xlabel('Batch#')
 plt.ylabel('Accuracy')
 plt.show()
