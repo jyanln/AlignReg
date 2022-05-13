@@ -65,7 +65,8 @@ acc, loss_hist = tf_train(ds_train,
                         loss,
                         l2_lambda,
                         augmentations=tf_default_augmentations,
-                        lazy_augmentation=True)
+                        lazy_augmentation=True,
+                        test_data=ds_test)
 
 # Plot data output
 plt.plot(loss_hist, color='r')
