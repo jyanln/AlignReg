@@ -33,9 +33,11 @@ def normalize_img(image, label):
 ds_train = ds_train.map(normalize_img)
 ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples)
 ds_train = ds_train.batch(batch_size)
+ds_train = ds_train.prefetch(2)
 
 ds_test = ds_test.map(normalize_img)
 ds_test = ds_test.batch(batch_size)
+ds_test = ds_test.prefetch(2)
 
 model = tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=input_size),
                                     tf.keras.layers.Dense(128, activation='relu'),
