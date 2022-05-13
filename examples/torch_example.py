@@ -14,16 +14,26 @@ sys.path.append('../src')
 from augment import *
 from torch_training import *
 
+# Setup torch model and training
+batch_size = 16
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-batch_size = 16
-
 trainsetraw = torchvision.datasets.CIFAR10(root='./data', train=True,
                                         download=True, transform=transform)
-trainset = AugmentedDataset(trainsetraw, torch_default_augmentations)
+
+# We will use the AugmentedDataset class to specify the augmentations, which
+# will be applied to the images automatically.
+# Here we use the default list from the augment module
+augmentations = torch_default_augmentations
+
+# We can choose to enable lazy_augmentations to augment the image batches as
+# they are used. Otherwise, all augmentations will be preprocessed, which may
+# be too large for the disk.
+trainset = AugmentedDataset(trainsetraw, augmentations, lazy_augmentation=True)
+
 trainloader = DataLoader(trainset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
 
@@ -57,32 +67,29 @@ class Net(nn.Module):
 
 net = Net()
 
-
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 loss = nn.CrossEntropyLoss()
 
 epochs=3
 l2_lambda = 0.01
 
+# Pass variables into training function
 accuracy, loss_history = torch_train(trainloader, testloader, net, optimizer, epochs, loss, l2_lambda, record_batch_size=64, acc_batch=2)
 
+# Check final accuracy
 correct = 0
 total = 0
-# since we're not training, we don't need to calculate the gradients for our outputs
 with torch.no_grad():
     for data in testloader:
         images, labels = data
-        # calculate outputs by running images through the network
         outputs = net(images)
-        # the class with the highest energy is what we choose as prediction
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
 
 print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
 
-
-print(f"The length of the loss_history is {len(loss_history)}")
+# Plot data output
 plt.plot(loss_history)
 plt.xlabel('Batch #')
 plt.ylabel('Loss [entropy]')
