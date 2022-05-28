@@ -9,7 +9,6 @@ accuracy_metric = keras.metrics.Accuracy()
 loss_history = []
 accuracy = []
 
-#@tf.function
 def measure_acc(model, images, labels, accuracy_metric, test_data = None):
     '''
     The function provides the accuracy of the model given the parameters.
@@ -36,7 +35,6 @@ def measure_acc(model, images, labels, accuracy_metric, test_data = None):
         accuracy_metric.update_state(pred_y, labels)
         return accuracy_metric.result().numpy()
 
-#@tf.function
 def train_step(model, images, aug_images, labels, optimizer, loss_fn, l2_lambda, test_data = None):
     '''
     Attrs:
@@ -58,21 +56,20 @@ def train_step(model, images, aug_images, labels, optimizer, loss_fn, l2_lambda,
         loss_val += tf_maxsql2(model, images, aug_images, loss_fn, labels, l2_lambda)
 
     loss_history.append(loss_val)
-    accuracy.append(measure_acc(model, images, labels, accuracy_metric, test_data))
 
     grads = tape.gradient(loss_val, model.trainable_variables)
     optimizer.apply_gradients(zip(grads, model.trainable_variables))
     return loss_val
 
 def tf_train(train_data, 
+             test_data,
              model, 
              optimizer, 
              epochs, 
              loss_fn, 
              l2_lambda,
              augmentations = tf_default_augmentations,
-             lazy_augmentation = False,
-             test_data = None):
+             lazy_augmentation = False):
     '''
     The function train the model if written by user in Tensorflow
     and return the loss and the accuracy of the model given the 
@@ -106,5 +103,7 @@ def tf_train(train_data,
                 aug_images = list(map(lambda aug: aug(images), augmentations))
 
             train_step(model, images, aug_images, labels, optimizer, loss_fn, l2_lambda, test_data)
+        
+        accuracy.append(measure_acc(model, images, labels, accuracy_metric, test_data))
 
     return accuracy[:], loss_history[:]

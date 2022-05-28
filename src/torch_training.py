@@ -31,7 +31,7 @@ def measure_acc(model, testloader, num_batch=-1):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-    return 100.0 * correct / total
+    return correct / total
 
 def torch_train(train_loader,
                 test_loader,
@@ -89,6 +89,7 @@ def torch_train(train_loader,
             if i % record_batch_size == record_batch_size - 1:
                 loss_history.append(running_loss)
                 running_loss = 0.0
-                accuracy.append(measure_acc(model, test_loader, acc_batch))
+
+        accuracy.append(measure_acc(model, test_loader, acc_batch))
 
     return accuracy[:], loss_history[:]
