@@ -45,6 +45,7 @@ def train_step(model, images, aug_images, labels, optimizer, loss_fn, l2_lambda,
     labels: labels of the images
     optimizer: optimizer used by the model while training 
     loss_fn: loss function used by the model while training
+    l2_lambda: The lambda parameter for regularizing on sql2 difference
     l2_lambda: The lambda parameter for applying the l2_regularization
     '''
     with tf.GradientTape() as tape:
@@ -81,7 +82,7 @@ def tf_train(train_data,
     model: the model passed defined by the user for training
     optimizer: optimizer used by the model while training 
     loss_fn: loss function used by the model while training
-    l2_lambda: The lambda parameter for applying the l2_regularization
+    l2_lambda: The lambda parameter for regularizing on sql2 difference
     lazy_augmentation: Whether to augment images as they are used, as opposed
                        to preprocessing every augmented image
     test_data: Data to be used for testing

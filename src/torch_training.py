@@ -54,7 +54,7 @@ def torch_train(train_loader,
     model: the model passed defined by the user for training
     optimizer: optimizer used by the model while training 
     loss_fn: loss function used by the model while training
-    l2_lambda: The lambda parameter for applying the l2_regularization
+    l2_lambda: The lambda parameter for regularizing on sql2 difference
     record_batch_size: Batch size for recording data
     lazy_augmentations: if specified, uses the given augmentation functions
                         instead of preprocessed augmented images
