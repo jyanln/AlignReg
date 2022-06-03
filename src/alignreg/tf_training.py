@@ -1,9 +1,10 @@
 import tensorflow as tf
 import tensorflow.keras as keras
-from regularization import tf_maxsql2
-from augment import tf_default_augmentations
 from tqdm import tqdm
 import numpy as np
+
+from .regularization import tf_maxsql2
+from .augment import tf_default_augmentations
 
 accuracy_metric = keras.metrics.Accuracy()
 loss_history = []

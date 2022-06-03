@@ -1,6 +1,6 @@
 __pycache__/
-examples/data/
-examples/model_1.png
+data/
+dist/
+build/
+src/alignreg.egg-info/
 *.swp
-src/*.swp
-examples/*.swp

@@ -1,8 +1,9 @@
 import numpy as np
 import torch
 from tqdm import tqdm
-from regularization import torch_maxsql2
-from augment import torch_default_augmentations
+
+from .regularization import torch_maxsql2
+from .augment import torch_default_augmentations
 
 loss_history = []
 accuracy = []
