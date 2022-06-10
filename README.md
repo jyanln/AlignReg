@@ -21,7 +21,7 @@ Or one can download the code and use it locally.
 
 One can use the package in simply one line of code. 
 
-Please visite the [iPython example](https://github.com/jyanln/AlignReg/blob/main/examples.ipynb) for usage instructions in both TensorFlow and PyTorch. 
+Please visit the [iPython example](https://github.com/jyanln/AlignReg/blob/main/examples.ipynb) for usage instructions in both TensorFlow and PyTorch. 
 
 ### Replication: 
 This repository serves for the purpose to guide others to use our tool, if you are interested in the scripts to replicate our results in paper, please contact us and we will share the repository for replication. 
